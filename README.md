@@ -1,4 +1,4 @@
-# guess-the-number
+# Guess The Number
 A simple Guess The Number Game developed by Sheldor, Simple yet Aesthetic
 
 
