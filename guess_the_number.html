@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href "C:\Users\USER\Documents\HTML\Top Projects\guess the number\favicon.ico" rel="icon" type="image/x-icon">
+  <title>Guess the Number Game</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+	  background: linear-gradient(to right, #ff6b6b, #3a1c71);
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      max-width: 1000px;
+	  min-height: 400px;
+      margin: 100px auto;
+      background-color: #fff;
+      border-radius: 75px;
+      padding: 20px;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+	  margin-top: 100px;
+    }
+
+    h1 {
+      color: #333;
+    }
+
+    p {
+      color: #555;
+    }
+
+    input[type="number"] {
+      width: 80%;
+      padding: 10px;
+      margin-top: 10px;
+      border: 2px solid #ccc;
+      border-radius: 5px;
+      font-size: 16px;
+      outline: none;
+	  text-align: center;
+	  font-weight: bold;
+    }
+
+    button {
+      margin-top: 10px;
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+      background-color: #4caf50;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+
+    .message {
+      font-weight: bold;
+      margin-top: 20px;
+      color: #333;
+    }
+
+    .lives {
+      margin-top: 20px;
+      font-weight: bold;
+      color: #ff6347;
+    }
+    
+    .heart-icon {
+      color: #e30707;
+      margin-right: 5px;
+    }
+	
+ </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Guess the Number Game</h1>
+    <p>Guess a number between 1 and 100:</p>
+    <input type="number" id="guessField" onkeydown="handleKeyPress(event)">
+	<br>
+	<br>
+    <button onclick="checkGuess()">Submit Guess</button>
+    <button onclick="restartGame()" id="re">Restart Game</button>
+	<br>
+	<br>
+    <p class="message" id="message"></p>
+    <p class="lives" id="lives"></p>
+  </div>
+	
+	
+  <script>
+    let randomNumber;
+    let attempts = 0;
+    const maxAttempts = 10;
+
+    function startGame() {
+      randomNumber = Math.floor(Math.random() * 100) + 1;
+      attempts = 0;
+      document.getElementById('guessField').disabled = false;
+	  document.getElementById('guessField').value = '';
+      document.querySelector('button').disabled = false;
+      document.getElementById('message').textContent = 'Enter a number';
+      document.getElementById('lives').innerHTML = `Lives: ${getHeartIcons(maxAttempts)}`;
+    }
+
+    function checkGuess() {
+	  
+      const guess = parseInt(document.getElementById('guessField').value);
+      const message = document.getElementById('message');
+      document.getElementById('guessField').value = '';
+      if (isNaN(guess) || guess < 1 || guess > 100) {
+        message.textContent = 'Please enter a valid number between 1 and 100.';
+        return;
+      }
+
+      attempts++;
+
+      if (attempts >= maxAttempts) {
+        message.textContent = 'You have used all your lives. The correct number was ' + randomNumber + '.';
+        disableInput();
+      } else if (guess === randomNumber) {
+        message.textContent = `Congratulations! You guessed the number ${randomNumber} correctly in ${attempts} attempts. `;
+        disableInput();
+      } else if (Math.abs(guess - randomNumber) <= 5) {
+        message.textContent = 'Very close! You\'re almost there.';
+      } else if (guess < randomNumber) {
+        message.textContent = 'Try a higher number.';
+      } else {
+        message.textContent = 'Try a lower number.';
+      }
+
+      document.getElementById('lives').innerHTML = `Lives: ${getHeartIcons(maxAttempts - attempts)}`;
+    }
+
+    function disableInput() {
+      document.getElementById('guessField').disabled = true;
+      document.querySelectorAll('button').forEach(btn => {
+        btn.disabled = true;
+      document.getElementById('re').disabled = false;
+      });
+    }
+
+    function handleKeyPress(event) {
+      if (event.keyCode === 13) {
+        checkGuess();
+      }
+    }
+
+    function restartGame() {
+      startGame();
+    }
+
+    function getHeartIcons(count) {
+      let hearts = '';
+      for (let i = 0; i < count; i++) {
+        hearts += '<i class="fas fa-heart heart-icon"></i>';
+      }
+      return hearts;
+    }
+
+    window.onload = startGame;
+  </script>
+</body>
+</html>
